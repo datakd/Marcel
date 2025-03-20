@@ -129,20 +129,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const fileInput = document.querySelector('input[name="file"]');
-        const userNameInput = document.querySelector('input[name="username"]');
-        const form = document.querySelector("form");
-        const submitButtons = document.querySelectorAll("button[type='submit']");
-
-        // 限制檔案格式為 .xlsx
-        fileInput.addEventListener("change", function () {
-            const fileName = fileInput.value.split("\\").pop(); // 取得檔名
-            if (!fileName.endsWith(".xlsx")) {
-                alert("請選擇 .xlsx 格式的檔案！");
-                fileInput.value = ""; // 清除不合格的檔案
-            }
-        });
-
         // 防止重複提交（按鈕變為「處理中...」）
         form.addEventListener("submit", function () {
             submitButtons.forEach(button => {
