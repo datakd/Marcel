@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 批量撤回/提交</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: #121212;
+            color: #e0e0e0;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 20px;
+            color: #00bcd4;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #b0bec5;
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #757575;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background: #252525;
+            color: #e0e0e0;
+            outline: none;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 48%;
+            padding: 10px;
+            background-color: #00bcd4;
+            color: #121212;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #008ba3;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .success {
+            color: #4caf50;
+        }
+
+        .error {
+            color: #ff5252;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🚀 撤回/提交 - 批量執行</h1>
+
+        <form method="post" enctype="multipart/form-data">
+            <label for="table_id">選擇表格：</label>
+            <select name="table_id" id="table_id">
+                <option value="account">客戶</option>
+                <option value="customEntity10__c">線索</option>
+                <option value="customEntity50__c">銷售線索</option>
+                <option value="customEntity25__c">發放申請</option>
+                <option value="customEntity28__c">發放明細</option>
+                <option value="customEntity14__c">交辦管理-台灣</option>
+                <option value="customEntity47__c">交辦管理-海外</option>
+                <option value="customEntity45__c">專案時數申請</option>
+                <option value="customEntity22__c">客戶關係聯絡人</option>
+                <option value="customEntity24__c">K大預約參會人</option>
+            </select>
+
+            <label for="file">選擇檔案：</label>
+            <p class="info-text">*需為.xlsx檔, 資料欄位必須包含 "id"</p>
+            <input type="file" name="file" accept=".xlsx" required>
+
+            <label for="username">撤回/提交人名稱：</label>
+            <p class="info-text">*請填寫完整名稱 (EX: 任朝貴)</p>
+            <input type="text" name="username" required>
+
+            <button type="submit" name="action" value="withdraw">撤回</button>
+            <button type="submit" name="action" value="submit">提交</button>
+        </form>
+
+        {% if success_message %}
+            <p class="message success">{{ success_message }}</p>
+        {% endif %}
+
+        {% if result %}
+            <p class="message error">{{ result }}</p>
+        {% endif %}
+    </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.querySelector('input[name="file"]');
+        const userNameInput = document.querySelector('input[name="username"]');
+        const form = document.querySelector("form");
+        const submitButtons = document.querySelectorAll("button[type='submit']");
+
+        // 限制檔案格式為 .xlsx
+        fileInput.addEventListener("change", function () {
+            const fileName = fileInput.value.split("\\").pop(); // 取得檔名
+            if (!fileName.endsWith(".xlsx")) {
+                alert("請選擇 .xlsx 格式的檔案！");
+                fileInput.value = ""; // 清除不合格的檔案
+            }
+        });
+
+        // 防止重複提交（按鈕變為「處理中...」）
+        form.addEventListener("submit", function () {
+            submitButtons.forEach(button => {
+                button.disabled = true;
+                button.textContent = "處理中...";
+            });
+        });
+    });
+</script>
+    
+
+</body>
+</html>
